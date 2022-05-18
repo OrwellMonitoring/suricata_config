@@ -123,3 +123,25 @@ output.elasticsearch:
   #api_key: "id:api_key"
   username: "elastic"
   password: "pass do elastic gerado em  (sudo ./elasticsearch-setup-passwords auto)"
+
+	<h2> Colocar o suricata no filebeat </h2>
+sudo filebeat modules enable suricata : Output esperado (Enabled suricata)
+sudo filebeat setup : Output esperado
+	Overwriting ILM policy is disabled. Set `setup.ilm.overwrite: true` for enabling.
+
+	Index setup finished.
+	Loading dashboards (Kibana must be running and reachable)
+	Loaded dashboards
+	Setting up ML using setup --machine-learning is going to be removed in 8.0.0. Please use the ML app instead.
+	See more: https://www.elastic.co/guide/en/machine-learning/current/index.html
+	It is not possible to load ML jobs into an Elasticsearch 8.0.0 or newer using the Beat.
+	Loaded machine learning job configurations
+	Loaded Ingest pipelines
+sudo systemctl start filebeat.service
+	<h2> Dashboard para ver os dados </h2>
+http://10.0.12.81:5601/ 
+Colocar o user e a password do elastic que foi gerado anteriormente
+type:dashboard suricata  Alerts
+type:dashboard suricata  Events
+	
+	
