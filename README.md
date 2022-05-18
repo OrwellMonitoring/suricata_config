@@ -14,4 +14,26 @@ Executing: /lib/systemd/systemd-sysv-install enable suricata" <br>
 sudo systemctl stop suricata.service  -> Se tudo estiver certo, deve-se parar de correr porque ainda não há nada no suricata de regras
 
 <h2> Configurar o yaml do suricata </h2>
-sudo nano /etc/suricata/suricata.yaml  -> Colocar la o nosso ficheiro do suricata.yaml que esta neste repositório
+sudo nano /etc/suricata/suricata.yaml  -> Colocar la o nosso ficheiro do suricata.yaml que esta neste repositório <br>
+Caso se pretenda configurar uma nova interface basta, no ficheiro yaml nas linhas do af-packet: colocar a interface que se pretende e também colocar um valor para o cluster id, salientar que este valor não pode estar a ser utilizado nas outras interfaces.<br>
+
+<h2> Regras do Suricata </h2>
+Para importar regras basicas no suricata, basta ir buscar regras por default com o comando: sudo suricata-update<br>
+Como ponto inicial pode-se também utilizar as regras que temos no ficheiro : suricata.rules, voltar a salientar que é tudo regras básicas e onde não entra qualquer tipo de drop, ou seja, temos apenas alertar.<br>
+Nota, as regras do surica-update vão para o ficheiro : /var/lib/suricata/rules/suricata.rules <br>
+
+<h2> Testar se as regras estão a dar corretamente </h2>
+	sudo suricata -T -c /etc/suricata/suricata.yaml -v
+
+<h2> Começar a correr o suricata </h2>
+	sudo systemctl start suricata.service
+	sudo systemctl status suricata.service
+  Esperar 1 a 2 minutos, suricata demora a correr :
+    sudo tail -f /var/log/suricata/suricata.log  e receber o output : data-- horas - <Info> - All AFP capture threads are running.
+  
+  <h2> Logs do Suricata </h2>
+cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, mas as logs deste ficheiro vão passar para o slack
+  <h3> Pesquisar por logs especificas </h3>
+  Fazendo o sid da regra pode-se fazer grep de todas as ocorrencias da regra
+   grep <sid_number> /var/log/suricata/fast.log
+ 
