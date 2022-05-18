@@ -24,6 +24,9 @@ Nota, as regras do surica-update vão para o ficheiro : /var/lib/suricata/rules/
 
 <h2> Testar se as regras estão a dar corretamente </h2>
 	sudo suricata -T -c /etc/suricata/suricata.yaml -v
+<h2 > Comandos a instalar </h2>
+sudo apt update
+sudo apt install jq
 
 <h2> Começar a correr o suricata </h2>
 	sudo systemctl start suricata.service
@@ -31,6 +34,9 @@ Nota, as regras do surica-update vão para o ficheiro : /var/lib/suricata/rules/
   Esperar 1 a 2 minutos, suricata demora a correr :
     sudo tail -f /var/log/suricata/suricata.log  e receber o output : data-- horas - <Info> - All AFP capture threads are running.
   
+	<h2> Como saber em que modo esta o suricata </h2>
+	sudo systemctl status suricata.service -> Nas linhas do fundo deve estar a indicar:Starting suricata in IPS (nfqueue) mode... done.
+
   <h2> Logs do Suricata </h2>
 cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, mas as logs deste ficheiro vão passar para o slack
   <h3> Pesquisar por logs especificas </h3>
@@ -42,3 +48,10 @@ cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, ma
 	sudo apt install jq
 	cat /var/log/suricata/eve.log
 	jq 'select(.alert .signature_id==<sid_number>)' /var/log/suricata/eve.json
+
+	<h2> Configurar a UFW para enviar trafego para o Suricata </h2>
+	/etc/ufw/before.rules
+	/etc/ufw/before6.rules
+	
+	Neste ficheiro colocamos, as configurações que para nós serviam, para uma outra rede pode ser necessário a alteração deste ficheiro.
+	
