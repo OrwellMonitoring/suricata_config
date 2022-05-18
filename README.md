@@ -55,3 +55,36 @@ cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, ma
 	
 	Neste ficheiro colocamos, as configurações que para nós serviam, para uma outra rede pode ser necessário a alteração deste ficheiro.
 	
+	<h2> Como instalar o kibana e elasticSearch </h2>
+	curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+	echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list<br>
+	sudo apt update<br>
+	sudo apt install elasticsearch kibana<br>
+
+	<h2> Configurar o elasticSearch </h2>
+	 /etc/elasticsearch/elasticsearch.yml -> e no onde esta "your private ip" trocar pelo ip da maquina, mas primeiro trocar pelo nosso ficheiro do elasticsearch <br>
+	# By default Elasticsearch is only accessible on localhost. Set a different<br>
+	# address here to expose this node on the network:<br>
+	#<br>
+	#network.host: 192.168.0.1<br>
+	network.bind_host: ["127.0.0.1", "your_private_ip"] <br>
+	#<br>
+	# By default Elasticsearch listens for HTTP traffic on the first free port it<br>
+	# finds starting at 9200. Set a specific HTTP port here:<br>
+	
+	<h2> Como correr o elasticSearch </h2>
+	sudo ufw allow in on eth<number><br>
+	sudo ufw allow out on eth<number><br>
+
+	sudo systemctl start elasticsearch.service
+	
+	<h2> Como reduzir o espaço que o elasticSearch ocupa </h2>
+	sudo nano /etc/elasticsearch/jvm.options.d/custom.options <br>
+	Dentro do ficheiro colocar:
+	# JVM Heap Size - see /etc/elasticsearch/jvm.options <br>
+	-Xms2g <br>
+	-Xmx2g <br>
+	E assim fica com 2g para o elasticSearch,se pretender 1Gb, basta meter 
+	-Xms1g <br>
+	-Xmx1g <br>
+
