@@ -102,3 +102,24 @@ cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, ma
 	sudo ./kibana-keystore add elasticsearch.username -> kibana_system
 	sudo ./kibana-keystore add elasticsearch.password -> Password do kibana_system gerado em (sudo ./elasticsearch-setup-passwords auto)
 	sudo systemctl start kibana.service
+
+	<h2> Configurar o filebeat </h2>
+	curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+	echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+	sudo nano /etc/filebeat/filebeat.yml e colocar :
+	# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
+# This requires a Kibana endpoint configuration.
+setup.kibana:
+"
+  host: "your_private_ip:5601" 
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: ["your_private_ip:9200"]
+
+  # Protocol - either `http` (default) or `https`.
+  #protocol: "https"
+
+  # Authentication credentials - either API key or username/password.
+  #api_key: "id:api_key"
+  username: "elastic"
+  password: "pass do elastic gerado em  (sudo ./elasticsearch-setup-passwords auto)"
