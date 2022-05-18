@@ -36,4 +36,9 @@ cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, ma
   <h3> Pesquisar por logs especificas </h3>
   Fazendo o sid da regra pode-se fazer grep de todas as ocorrencias da regra
    grep <sid_number> /var/log/suricata/fast.log
- 
+
+	<h3>Logs em Json </h3>
+	
+	sudo apt install jq
+	cat /var/log/suricata/eve.log
+	jq 'select(.alert .signature_id==<sid_number>)' /var/log/suricata/eve.json
