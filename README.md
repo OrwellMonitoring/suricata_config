@@ -38,7 +38,7 @@ sudo apt install jq
 	sudo systemctl status suricata.service -> Nas linhas do fundo deve estar a indicar:Starting suricata in IPS (nfqueue) mode... done.
 
   <h2> Logs do Suricata </h2>
-cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, mas as logs deste ficheiro vão passar para o slack
+cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, mas as logs deste ficheiro vão passar para o slack <br>
   <h3> Pesquisar por logs especificas </h3>
   Fazendo o sid da regra pode-se fazer grep de todas as ocorrencias da regra
    grep <sid_number> /var/log/suricata/fast.log
