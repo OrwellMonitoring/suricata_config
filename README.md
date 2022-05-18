@@ -87,4 +87,18 @@ cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, ma
 	E assim fica com 2g para o elasticSearch,se pretender 1Gb, basta meter 
 	-Xms1g <br>
 	-Xmx1g <br>
-
+	<h2> Passwords geradas de forma automática </h2>
+	Correr os seguintes comandos: (NOTA ESTES COMANDOS SÓ PODEM SER CORRIDOS 1 VEZ LOGO DEVEM SER GUARDADOS NUM LOCAL SEGUROS AS PASSWORDS)
+	cd /usr/share/elasticsearch/bin
+	sudo ./elasticsearch-setup-passwords auto
+	
+	<h2 > Configurar o Kibana </h2>
+	cd /usr/share/kibana/bin/
+	sudo ./kibana-encryption-keys generate -q
+	
+	E com estas passwords geradas, substituir nos campos <key > pela respetiva key, gerada anteriormente e trocar o "your ip"
+	
+	cd /usr/share/kibana/bin 
+	sudo ./kibana-keystore add elasticsearch.username -> kibana_system
+	sudo ./kibana-keystore add elasticsearch.password -> Password do kibana_system gerado em (sudo ./elasticsearch-setup-passwords auto)
+	sudo systemctl start kibana.service
