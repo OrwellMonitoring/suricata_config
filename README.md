@@ -148,7 +148,7 @@ Loaded machine learning job configurations
 Loaded Ingest pipelines<br>
 sudo systemctl start filebeat.service
 <h2> Dashboard para ver os dados </h2>
-http://10.0.12.81:5601/ 
+http://your_ip:5601/ 
 Colocar o user e a password do elastic que foi gerado anteriormente
 
 type:dashboard suricata  Alerts
