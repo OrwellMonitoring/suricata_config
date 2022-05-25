@@ -153,3 +153,5 @@ Colocar o user e a password do elastic que foi gerado anteriormente
 
 type:dashboard suricata  Alerts
 type:dashboard suricata  Events
+	
+Fazer enable de tudo
