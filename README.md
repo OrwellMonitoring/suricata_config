@@ -145,7 +145,7 @@ Setting up ML using setup --machine-learning is going to be removed in 8.0.0. Pl
 See more: https://www.elastic.co/guide/en/machine-learning/current/index.html
 It is not possible to load ML jobs into an Elasticsearch 8.0.0 or newer using the Beat.
 Loaded machine learning job configurations
-Loaded Ingest pipelines
+Loaded Ingest pipelines<br>
 sudo systemctl start filebeat.service
 <h2> Dashboard para ver os dados </h2>
 http://10.0.12.81:5601/ 
