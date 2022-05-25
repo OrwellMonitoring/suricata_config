@@ -19,7 +19,6 @@ Caso se pretenda configurar uma nova interface basta, no ficheiro yaml nas linha
 
 <h2> Regras do Suricata </h2>
 Para importar regras basicas no suricata, basta ir buscar regras por default com o comando: sudo suricata-update<br>
-Como ponto inicial pode-se também utilizar as regras que temos no ficheiro : suricata.rules, voltar a salientar que é tudo regras básicas e onde não entra qualquer tipo de drop, ou seja, temos apenas alertar.<br>
 Nota, as regras do surica-update vão para o ficheiro : /var/lib/suricata/rules/suricata.rules <br>
 
 <h2> Testar se as regras estão a dar corretamente </h2>
@@ -33,7 +32,9 @@ sudo apt install jq
 	sudo systemctl status suricata.service
   Esperar 1 a 2 minutos, suricata demora a correr :
     sudo tail -f /var/log/suricata/suricata.log  e receber o output : data-- horas - <Info> - All AFP capture threads are running.
-  
+	<h2> Colocar o Suricata em IPS </h2>
+	Deve se ir a  /etc/default/suricata e alterar a linha: LISTENMODE=af-packet para 
+	LISTENMODE=nfqueue
 	<h2> Como saber em que modo esta o suricata </h2>
 	sudo systemctl status suricata.service -> Nas linhas do fundo deve estar a indicar:Starting suricata in IPS (nfqueue) mode... done.
 
@@ -52,6 +53,16 @@ jq 'select(.alert .signature_id==<sid_number>)' /var/log/suricata/eve.json
 <h2> Configurar a UFW para enviar trafego para o Suricata </h2>
 /etc/ufw/before.rules
 /etc/ufw/before6.rules
+Correr os comandos:
+	sudo iptables -I FORWARD -j NFQUEUE
+	sudo iptables -I INPUT -j NFQUEUE
+	sudo iptables -I OUTPUT -j NFQUEUE
+	sudo iptables -I INPUT -p tcp  -j NFQUEUE
+	sudo iptables -I OUTPUT -p tcp -j NFQUEUE
+	sudo iptables -I FORWARD -i eth0 -o eth1 -j NFQUEUE
+
+	sudo iptables -I FORWARD -i eth1 -o eth0 -j NFQUEUE
+	 sudo ufw enable
 
 Neste ficheiro colocamos, as configurações que para nós serviam, para uma outra rede pode ser necessário a alteração deste ficheiro.
 
@@ -79,7 +90,7 @@ sudo ufw allow out on eth<number><br>
 sudo systemctl start elasticsearch.service
 
 <h2> Como reduzir o espaço que o elasticSearch ocupa </h2>
-sudo nano /etc/elasticsearch/jvm.options.d/custom.options <br>
+sudo  vim /etc/elasticsearch/jvm.options
 Dentro do ficheiro colocar:
 # JVM Heap Size - see /etc/elasticsearch/jvm.options <br>
 -Xms2g <br>
@@ -96,7 +107,8 @@ sudo ./elasticsearch-setup-passwords auto
 cd /usr/share/kibana/bin/
 sudo ./kibana-encryption-keys generate -q
 
-E com estas passwords geradas, substituir nos campos <key > pela respetiva key, gerada anteriormente e trocar o "your ip"
+sudo vim /etc/kibana/kibana.yml
+E com estas passwords geradas, substituir nos campos <key > pela respetiva key, gerada anteriormente e trocar o "your ip" dentro do ficheiro yaml
 
 cd /usr/share/kibana/bin 
 sudo ./kibana-keystore add elasticsearch.username -> kibana_system
@@ -106,70 +118,16 @@ sudo systemctl start kibana.service
 <h2> Configurar o filebeat </h2>
 curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+sudo apt update
+sudo apt install filebeat
 sudo nano /etc/filebeat/filebeat.yml e colocar :
 # Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
 # This requires a Kibana endpoint configuration.<h3> Pesquisar por logs especificas </h3>
-Fazendo o sid da regra pode-se fazer grep de todas as ocorrencias da regra
-grep <sid_number> /var/log/suricata/fast.log
-<h3>Logs em Json </h3>
-sudo apt install jq
-cat /var/log/suricata/eve.log
-jq 'select(.alert .signature_id==<sid_number>)' /var/log/suricata/eve.json
-<h2> Configurar a UFW para enviar trafego para o Suricata </h2>
-/etc/ufw/before.rules
-/etc/ufw/before6.rules
-Neste ficheiro colocamos, as configurações que para nós serviam, para uma outra rede pode ser necessário a alteração deste ficheiro.
-<h2> Como instalar o kibana e elasticSearch </h2>
-curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list<br>
-sudo apt update<br>
-sudo apt install elasticsearch kibana<br>
-<h2> Configurar o elasticSearch </h2>
-/etc/elasticsearch/elasticsearch.yml -> e no onde esta "your private ip" trocar pelo ip da maquina, mas primeiro trocar pelo nosso ficheiro do elasticsearch <br>
-# By default Elasticsearch is only accessible on localhost. Set a different<br>
-# address here to expose this node on the network:<br>
-#<br>
-#network.host: 192.168.0.1<br>
-network.bind_host: ["127.0.0.1", "your_private_ip"] <br>
-#<br>
-# By default Elasticsearch listens for HTTP traffic on the first free port it<br>
-# finds starting at 9200. Set a specific HTTP port here:<br>
-<h2> Como correr o elasticSearch </h2>
-sudo ufw allow in on eth<number><br>
-sudo ufw allow out on eth<number><br>
-sudo systemctl start elasticsearch.service
-<h2> Como reduzir o espaço que o elasticSearch ocupa </h2>
-sudo nano /etc/elasticsearch/jvm.options.d/custom.options <br>
-Dentro do ficheiro colocar:
-# JVM Heap Size - see /etc/elasticsearch/jvm.options <br>
--Xms2g <br>
--Xmx2g <br>
-E assim fica com 2g para o elasticSearch,se pretender 1Gb, basta meter 
--Xms1g <br>
--Xmx1g <br>
-<h2> Passwords geradas de forma automática </h2>
-Correr os seguintes comandos: (NOTA ESTES COMANDOS SÓ PODEM SER CORRIDOS 1 VEZ LOGO DEVEM SER GUARDADOS NUM LOCAL SEGUROS AS PASSWORDS)
-cd /usr/share/elasticsearch/bin
-sudo ./elasticsearch-setup-passwords auto
-<h2 > Configurar o Kibana </h2>
-cd /usr/share/kibana/bin/
-sudo ./kibana-encryption-keys generate -q
-E com estas passwords geradas, substituir nos campos <key > pela respetiva key, gerada anteriormente e trocar o "your ip"
-cd /usr/share/kibana/bin 
-sudo ./kibana-keystore add elasticsearch.username -> kibana_system
-sudo ./kibana-keystore add elasticsearch.password -> Password do kibana_system gerado em (sudo ./elasticsearch-setup-passwords auto)
-sudo systemctl start kibana.service
-<h2> Configurar o filebeat </h2>
-curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
-sudo nano /etc/filebeat/filebeat.yml e colocar :
-# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.
-# This requires a Kibana endpoint configuration.
 setup.kibana:
-host: "your_private_ip:5601" 
+	host: "your_private_ip:5601" 
 output.elasticsearch:
-# Array of hosts to connect to.
-hosts: ["your_private_ip:9200"]
+	# Array of hosts to connect to.
+	hosts: ["your_private_ip:9200"]
 # Protocol - either `http` (default) or `https`.
 #protocol: "https"
 # Authentication credentials - either API key or username/password.
@@ -195,39 +153,3 @@ Colocar o user e a password do elastic que foi gerado anteriormente
 
 type:dashboard suricata  Alerts
 type:dashboard suricata  Events
-setup.kibana:
-"
-host: "your_private_ip:5601" 
-output.elasticsearch:
-# Array of hosts to connect to.
-hosts: ["your_private_ip:9200"]
-
-# Protocol - either `http` (default) or `https`.
-#protocol: "https"
-
-# Authentication credentials - either API key or username/password.
-#api_key: "id:api_key"
-username: "elastic"
-password: "pass do elastic gerado em  (sudo ./elasticsearch-setup-passwords auto)"
-
-<h2> Colocar o suricata no filebeat </h2>
-sudo filebeat modules enable suricata : Output esperado (Enabled suricata)
-sudo filebeat setup : Output esperado
-Overwriting ILM policy is disabled. Set `setup.ilm.overwrite: true` for enabling.
-
-Index setup finished.
-Loading dashboards (Kibana must be running and reachable)
-Loaded dashboards
-Setting up ML using setup --machine-learning is going to be removed in 8.0.0. Please use the ML app instead.
-See more: https://www.elastic.co/guide/en/machine-learning/current/index.html
-It is not possible to load ML jobs into an Elasticsearch 8.0.0 or newer using the Beat.
-Loaded machine learning job configurations
-Loaded Ingest pipelines
-sudo systemctl start filebeat.service
-<h2> Dashboard para ver os dados </h2>
-http://10.0.12.81:5601/ 
-Colocar o user e a password do elastic que foi gerado anteriormente
-type:dashboard suricata  Alerts
-type:dashboard suricata  Events
-
-
