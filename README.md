@@ -2,8 +2,7 @@
 Suricata is a Network Security Monitoring (NSM) tool that uses sets of community created and user defined signatures (also referred to as rules) to examine and process network traffic. Suricata can generate log events, trigger alerts, and drop traffic when it detects suspicious packets or requests to any number of different services running on a server.<br>
 Este repositório tem como objetivo ter todos os fichieros necessários para criar de formar simples e rápida um serviço suricata em modo IPS, Intrusion Prevention System , a correr num kibana, utilizando elastic Search.<br>
 De salientar que todas as regras que estão a ser utilizadas no suricata são simples e baśicas sendo da responsabilidade da testebed definir quais são as regras que devem estar presentes.<br>
-O suricata deve ter acesso a todos os pacotes da rede para eles o detetetar e dar as suas alarmisticas sendo que estes alarmes vão estar a ser enviadas para um slack, com todas as logs sendo que este slack deve também ser alterado os tokens de acesso ao slack para funcionar.<br
->
+O suricata deve ter acesso a todos os pacotes da rede para eles o detetetar e dar as suas alarmisticas sendo que estes alarmes vão estar a ser enviadas para um slack, com todas as logs sendo que este slack deve também ser alterado os tokens de acesso ao slack para funcionar.<br>
 
 <h2> Como instalar o Suricata </h2>
 sudo add-apt-repository ppa:oisf/suricata-stable
@@ -62,7 +61,7 @@ Correr os comandos:
 	sudo iptables -I FORWARD -i eth0 -o eth1 -j NFQUEUE
 
 	sudo iptables -I FORWARD -i eth1 -o eth0 -j NFQUEUE
-	 sudo ufw enable
+	sudo ufw enable
 
 Neste ficheiro colocamos, as configurações que para nós serviam, para uma outra rede pode ser necessário a alteração deste ficheiro.
 
@@ -88,7 +87,7 @@ sudo ufw allow in on eth<number><br>
 sudo ufw allow out on eth<number><br>
 
 sudo systemctl start elasticsearch.service
-
+sudo systemctl enable elasticsearch.service
 <h2> Como reduzir o espaço que o elasticSearch ocupa </h2>
 sudo  vim /etc/elasticsearch/jvm.options
 Dentro do ficheiro colocar:
@@ -114,6 +113,8 @@ cd /usr/share/kibana/bin
 sudo ./kibana-keystore add elasticsearch.username -> kibana_system
 sudo ./kibana-keystore add elasticsearch.password -> Password do kibana_system gerado em (sudo ./elasticsearch-setup-passwords auto)
 sudo systemctl start kibana.service
+sudo systemctl enable kibana.service
+	
 
 <h2> Configurar o filebeat </h2>
 curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
@@ -147,6 +148,8 @@ It is not possible to load ML jobs into an Elasticsearch 8.0.0 or newer using th
 Loaded machine learning job configurations
 Loaded Ingest pipelines<br>
 sudo systemctl start filebeat.service
+sudo systemctl enable filebeat.service
+	
 <h2> Dashboard para ver os dados </h2>
 http://your_ip:5601/ 
 Colocar o user e a password do elastic que foi gerado anteriormente
