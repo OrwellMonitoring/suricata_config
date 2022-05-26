@@ -11,7 +11,7 @@ O suricata deve ter acesso a todos os pacotes da rede para eles o detetetar e da
 Output a receber:  
 "suricata.service is not a native service, redirecting to systemd-sysv-install.  
 Executing: /lib/systemd/systemd-sysv-install enable suricata"  
-sudo systemctl stop suricata.service  -> Se tudo estiver certo, deve-se parar de correr porque ainda não há nada no suricata de regras  
+**sudo systemctl stop suricata.service**  -> Se tudo estiver certo, deve-se parar de correr porque ainda não há nada no suricata de regras  
 
 
 ## Configurar o yaml do suricata 
@@ -25,20 +25,22 @@ Podem também serem criadas regras, e essas podem ser colocadas no **/var/lib/su
 
 ## Testar se as regras estão a dar corretamente 
 **sudo suricata -T -c /etc/suricata/suricata.yaml -v**
-<h2 > Comandos a instalar </h2>
-sudo apt update
-sudo apt install jq
+## Comandos a instalar 
+**sudo apt update**
+**sudo apt install jq**
 
-<h2> Começar a correr o suricata </h2>
-	sudo systemctl start suricata.service
-	sudo systemctl status suricata.service
-  Esperar 1 a 2 minutos, suricata demora a correr :
-    sudo tail -f /var/log/suricata/suricata.log  e receber o output : data-- horas - <Info> - All AFP capture threads are running.
-	<h2> Colocar o Suricata em IPS </h2>
-	Deve se ir a  /etc/default/suricata e alterar a linha: LISTENMODE=af-packet para 
-	LISTENMODE=nfqueue
-	<h2> Como saber em que modo esta o suricata </h2>
-	sudo systemctl status suricata.service -> Nas linhas do fundo deve estar a indicar:Starting suricata in IPS (nfqueue) mode... done.
+## Começar a correr o suricata 
+**sudo systemctl start suricata.service**
+**sudo systemctl status suricata.service**
+Notas:  
+Esperar 1 a 2 minutos, suricata demora a correr :
+**sudo tail -f /var/log/suricata/suricata.log**  e receber o output : data-- horas - <Info> - All AFP capture threads are running.  
+
+## Colocar o Suricata em IPS 
+Deve se ir a  /etc/default/suricata e alterar a linha:    
+**LISTENMODE=af-packet** para **LISTENMODE=nfqueue**
+## Como saber em que modo esta o suricata 
+sudo systemctl status suricata.service -> Nas linhas do fundo deve estar a indicar:Starting suricata in IPS (nfqueue) mode... done.
 
   <h2> Logs do Suricata </h2>
 cat  /var/log/suricata/fast.log -> As logs do suricata estão neste ficheiro, mas as logs deste ficheiro vão passar para o slack <br>
