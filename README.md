@@ -122,7 +122,7 @@ Pode importar o nosso ficheiro de configuração do kibana.yml e altera-lo em **
 Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.  
 This requires a Kibana endpoint configuration.  
 setup.kibana:  
-**host: "your_private_ip:5601" **  
+**host: "your_private_ip:5601"**  
 output.elasticsearch:  
 Array of hosts to connect to.  
 **hosts: ["your_private_ip:9200"]**
