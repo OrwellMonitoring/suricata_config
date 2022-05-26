@@ -1,27 +1,30 @@
 # suricata_config
-Suricata is a Network Security Monitoring (NSM) tool that uses sets of community created and user defined signatures (also referred to as rules) to examine and process network traffic. Suricata can generate log events, trigger alerts, and drop traffic when it detects suspicious packets or requests to any number of different services running on a server.<br>
-Este repositório tem como objetivo ter todos os fichieros necessários para criar de formar simples e rápida um serviço suricata em modo IPS, Intrusion Prevention System , a correr num kibana, utilizando elastic Search.<br>
-De salientar que todas as regras que estão a ser utilizadas no suricata são simples e baśicas sendo da responsabilidade da testebed definir quais são as regras que devem estar presentes.<br>
-O suricata deve ter acesso a todos os pacotes da rede para eles o detetetar e dar as suas alarmisticas sendo que estes alarmes vão estar a ser enviadas para um slack, com todas as logs sendo que este slack deve também ser alterado os tokens de acesso ao slack para funcionar.<br>
+Suricata is a Network Security Monitoring (NSM) tool that uses sets of community created and user defined signatures (also referred to as rules) to examine and process network traffic. Suricata can generate log events, trigger alerts, and drop traffic when it detects suspicious packets or requests to any number of different services running on a server.  
+Este repositório tem como objetivo ter todos os fichieros necessários para criar de formar simples e rápida um serviço suricata em modo IPS, Intrusion Prevention System , a correr num kibana, utilizando elastic Search.  
+De salientar que todas as regras que estão a ser utilizadas no suricata são simples e baśicas sendo da responsabilidade da testebed definir quais são as regras que devem estar presentes.  
+O suricata deve ter acesso a todos os pacotes da rede para eles o detetetar e dar as suas alarmisticas sendo que estes alarmes vão estar a ser enviadas para um slack, com todas as logs sendo que este slack deve também ser alterado os tokens de acesso ao slack para funcionar.  
 
-<h2> Como instalar o Suricata </h2>
-sudo add-apt-repository ppa:oisf/suricata-stable
-sudo apt install suricata
-sudo systemctl enable suricata.service : <br>
-Output a receber:  "suricata.service is not a native service, redirecting to systemd-sysv-install.
-Executing: /lib/systemd/systemd-sysv-install enable suricata" <br>
-sudo systemctl stop suricata.service  -> Se tudo estiver certo, deve-se parar de correr porque ainda não há nada no suricata de regras
+## Como instalar o Suricata 
+**sudo add-apt-repository ppa:oisf/suricata-stable**   
+**sudo apt install suricata**
+**sudo systemctl enable suricata.service**  
+Output a receber:  
+"suricata.service is not a native service, redirecting to systemd-sysv-install.  
+Executing: /lib/systemd/systemd-sysv-install enable suricata"  
+sudo systemctl stop suricata.service  -> Se tudo estiver certo, deve-se parar de correr porque ainda não há nada no suricata de regras  
 
-<h2> Configurar o yaml do suricata </h2>
-sudo nano /etc/suricata/suricata.yaml  -> Colocar la o nosso ficheiro do suricata.yaml que esta neste repositório <br>
-Caso se pretenda configurar uma nova interface basta, no ficheiro yaml nas linhas do af-packet: colocar a interface que se pretende e também colocar um valor para o cluster id, salientar que este valor não pode estar a ser utilizado nas outras interfaces.<br>
 
-<h2> Regras do Suricata </h2>
-Para importar regras basicas no suricata, basta ir buscar regras por default com o comando: sudo suricata-update<br>
-Nota, as regras do surica-update vão para o ficheiro : /var/lib/suricata/rules/suricata.rules <br>
+## Configurar o yaml do suricata 
+**sudo nano /etc/suricata/suricata.yaml**  -> Colocar la o nosso ficheiro do suricata.yaml que esta neste repositório  
+Caso se pretenda configurar uma nova interface basta, no ficheiro yaml nas linhas do **af-packet**: colocar a interface que se pretende e também colocar um valor para o cluster id, salientar que este valor não pode estar a ser utilizado nas outras interfaces.   
 
-<h2> Testar se as regras estão a dar corretamente </h2>
-	sudo suricata -T -c /etc/suricata/suricata.yaml -v
+## Regras do Suricata 
+Para importar regras basicas no suricata, basta ir buscar regras por default com o comando: **sudo suricata-update**     
+Nota, as regras do surica-update vão para o ficheiro : **/var/lib/suricata/rules/suricata.rules**  
+Podem também serem criadas regras, e essas podem ser colocadas no **/var/lib/suricata/rules/local.rules** que já se encontra configurado no ficheiro yaml do suricata para aceitar as regras presentes neste ficheiro.  
+
+## Testar se as regras estão a dar corretamente 
+**sudo suricata -T -c /etc/suricata/suricata.yaml -v**
 <h2 > Comandos a instalar </h2>
 sudo apt update
 sudo apt install jq
