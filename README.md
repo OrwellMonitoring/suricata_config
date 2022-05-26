@@ -72,12 +72,12 @@ Neste ficheiro colocamos, as configurações que para nós serviam, para uma out
 ## Configurar o elasticSearch 
 Pode importar o ficheiro  elasticsearch.yml presente no nosso repositório e colocar em  **/etc/elasticsearch/elasticsearch.yml** onde deve apenas alterar o campo onde diz "your_private_ip".  
 Onde encontrar o your_private ip:  
-# By default Elasticsearch is only accessible on localhost. Set a different  
-# address here to expose this node on the network:  
-#network.host: 192.168.0.1  
+ By default Elasticsearch is only accessible on localhost. Set a different  
+address here to expose this node on the network:  
+network.host: 192.168.0.1  
 network.bind_host: ["127.0.0.1", "your_private_ip"]  
-# By default Elasticsearch listens for HTTP traffic on the first free port it  
-# finds starting at 9200. Set a specific HTTP port here:  
+ By default Elasticsearch listens for HTTP traffic on the first free port it  
+ finds starting at 9200. Set a specific HTTP port here:  
 
 ## Como correr o elasticSearch 
 Para as interfaces que pretende monitorizar colocar no comando abaixo
@@ -119,17 +119,17 @@ Pode importar o nosso ficheiro de configuração do kibana.yml e altera-lo em **
 **sudo apt update**  
 **sudo apt install filebeat**  
 **sudo nano /etc/filebeat/filebeat.yml** e colocar :  
-# Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.  
-# This requires a Kibana endpoint configuration.<h3> Pesquisar por logs especificas  
+ Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.  
+ This requires a Kibana endpoint configuration.<h3> Pesquisar por logs especificas  
 setup.kibana:  
 	**host: "your_private_ip:5601" **  
 output.elasticsearch:  
 	# Array of hosts to connect to.  
 	**hosts: ["your_private_ip:9200"]**
-# Protocol - either `http` (default) or `https`.  
-#protocol: "https"  
-# Authentication credentials - either API key or username/password.  
-#api_key: "id:api_key"  
+ Protocol - either `http` (default) or `https`.  
+protocol: "https"  
+ Authentication credentials - either API key or username/password.  
+api_key: "id:api_key"  
 username: "elastic"  
 password: "pass do elastic gerado em  (sudo ./elasticsearch-setup-passwords auto)"  
 
