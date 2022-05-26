@@ -71,7 +71,7 @@ Neste ficheiro colocamos, as configurações que para nós serviam, para uma out
 
 ## Configurar o elasticSearch 
 Pode importar o ficheiro  elasticsearch.yml presente no nosso repositório e colocar em  **/etc/elasticsearch/elasticsearch.yml** onde deve apenas alterar o campo onde diz "your_private_ip".  
-Onde encontrar o your_private ip:: 
+Onde encontrar o your_private ip:  
 # By default Elasticsearch is only accessible on localhost. Set a different  
 # address here to expose this node on the network:  
 #network.host: 192.168.0.1  
