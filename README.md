@@ -119,8 +119,8 @@ Pode importar o nosso ficheiro de configuração do kibana.yml e altera-lo em **
 **sudo apt update**  
 **sudo apt install filebeat**  
 **sudo nano /etc/filebeat/filebeat.yml** e colocar :  
- Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.  
- This requires a Kibana endpoint configuration.<h3> Pesquisar por logs especificas  
+Starting with Beats version 6.0.0, the dashboards are loaded via the Kibana API.  
+This requires a Kibana endpoint configuration.  
 setup.kibana:  
 **host: "your_private_ip:5601" **  
 output.elasticsearch:  
