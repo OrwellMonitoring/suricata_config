@@ -137,5 +137,5 @@ if __name__ == '__main__':
             time.sleep(1)
 
     f = open("./current_line.txt", "w")
-    f.write(lines_total)
+    f.write(str(lines_total))
     f.close()
