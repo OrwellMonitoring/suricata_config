@@ -81,7 +81,7 @@ if __name__ == '__main__':
     with open(config.SURICATA_LOCATION) as f:
         alerts = json.loads(
             '['+','.join(list(
-                islice(f, current_line, 1000)
+                islice(f, current_line, lines_total)
             ))+']'
         )
 
